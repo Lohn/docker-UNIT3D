@@ -19,6 +19,7 @@ RUN service php7.2-fpm restart
 
 
 RUN service supervisor start
+#Below Command wont work in containers while building...
 #RUN supervisorctl reread && supervisorctl update
 
 WORKDIR /var/www/html
@@ -26,7 +27,10 @@ RUN git clone https://github.com/HDInnovations/UNIT3D.git .
 RUN chown -R www-data: storage bootstrap public config && find . -type d -exec chmod 0755 '{}' + -or -type f -exec chmod 0644 '{}' +
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 RUN mv .env.example .env
+RUN sed -i "s|DB_HOST=127.0.0.1|DB_HOST=MYSQLHOSTGOESHERE |g" .env
+RUN wget -q -O /tmp/libpng12.deb http://mirrors.kernel.org/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1_amd64.deb && dpkg -i /tmp/libpng12.deb && rm /tmp/libpng12.deb
 RUN composer install && composer require predis/predis && npm install && npm install --save-dev socket.io-client && npm run dev
+
 RUN php artisan key:generate
 
 #Needs MySql up and running...
