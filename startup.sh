@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 /usr/bin/php artisan migrate --seed
-service supervisorctl start
+/etc/init.d/supervisor start
 supervisorctl reread && supervisorctl update

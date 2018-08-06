@@ -26,7 +26,8 @@ RUN composer install && composer require predis/predis && npm install && npm ins
 RUN php artisan key:generate
 
 RUN chown -R www-data: storage bootstrap public config
-COPY default /etc/nginx/sites-available/default
+COPY default /etc/nginx/conf.d/default.conf
+RUN sed -i "s|user  nginx;|user  www-data; |g" /etc/nginx/nginx.conf
 COPY laravel-echo-server.json /var/www/html/laravel-echo-server.json
 COPY unit3d.conf /etc/supervisor/conf.d/unit3d.conf
 COPY startup.sh /bin/startup.sh

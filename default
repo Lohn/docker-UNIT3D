@@ -11,8 +11,12 @@ location / {
     try_files $uri $uri/ /index.php$is_args$args;
 }
 
-location ~ \.php$ {
-   include snippets/fastcgi-php.conf;
-   fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
-}
+location ~* \.php$ {
+    fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+    include         fastcgi_params;
+    fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+    fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+  }
+
+
 }
