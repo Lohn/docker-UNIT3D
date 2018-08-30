@@ -19,6 +19,7 @@ WORKDIR /var/www/html
 RUN git clone https://github.com/HDInnovations/UNIT3D.git .
 RUN chown -R www-data: storage bootstrap public config && find . -type d -exec chmod 0755 '{}' + -or -type f -exec chmod 0644 '{}' +
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
+RUN cp .env.example .env
 RUN wget -q -O /tmp/libpng12.deb http://mirrors.kernel.org/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1_amd64.deb && dpkg -i /tmp/libpng12.deb && rm /tmp/libpng12.deb
 RUN composer install && composer require predis/predis && npm install && npm install --save-dev socket.io-client && npm run dev
 
